@@ -52,6 +52,8 @@ class MainWindow {
     static void onCode(Fl_Widget*, void*);
     static void onDeCode(Fl_Widget*, void*);
     static void onExit(Fl_Widget*, void*);
+    static void clearOnInput(Fl_Widget*, void*);
+    static void clearOnCode(Fl_Widget*, void*);
 
     static bool validateString(const std::string& s, bool isInf);
 

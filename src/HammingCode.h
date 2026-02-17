@@ -106,7 +106,6 @@ class HammingCode {
             k = n - m - 1;
 
             std::vector<int> E(m + 1);
-            std::cout << newS << " " << k << " " << m << "\n";
             for (int i = 0; i <= m; i++) {
                 E[i] = 0;
                 for (int j = 0; j < n; j++) {

@@ -19,6 +19,8 @@ MainWindow::MainWindow(int w, int h, const char* name) {
     //------------------------1 line---------------------------------
     infInput = new Fl_Input(firstBorder, yCoord, longField, fieldHight, "Информационная последовательность");
     infInput->align(FL_ALIGN_TOP);
+    infInput->when(FL_WHEN_CHANGED);
+    infInput->callback(clearOnInput, this);
 
     btnInput = new Fl_Button(secondBorder, yCoord, shortField, fieldHight, "ВВОД");
     btnInput->callback(onInput, this);
@@ -52,6 +54,8 @@ MainWindow::MainWindow(int w, int h, const char* name) {
     //------------------------4 line---------------------------------
     codeInput = new Fl_Input(firstBorder, yCoord, longField, fieldHight, "Принятая кодовая комбинация");
     codeInput->align(FL_ALIGN_TOP);
+    codeInput->when(FL_WHEN_CHANGED);
+    codeInput->callback(clearOnCode, this);
 
     btnDeCode = new Fl_Button(secondBorder, yCoord, shortField, fieldHight, "ДЕКОДИРОВАТЬ");
     btnDeCode->color(FL_WHITE);
@@ -108,6 +112,10 @@ void MainWindow::onInput(Fl_Widget*, void* userdata) {
 void MainWindow::onCode(Fl_Widget*, void* userdata) {
     auto* ui = static_cast<MainWindow*>(userdata);
 
+    if (infString.empty()) {
+        return;
+    }
+
     Answer codingRes = obj.coding(infString);
     
     ui->codeOutput->value(codingRes.combination.c_str());
@@ -148,6 +156,37 @@ void MainWindow::onExit(Fl_Widget*, void* userdata) {
     exit(0);
 }
 
+void MainWindow::clearOnInput(Fl_Widget*, void* userdata) {
+    auto* ui = static_cast<MainWindow*>(userdata);
+
+    ui->codeInput->value("");
+    ui->codeOutput->value("");
+    ui->kOutput->value("");
+    ui->mOutput->value("");
+    ui->nOutput->value("");
+    ui->controlOutput->value("");
+    ui->rOutput->value("");
+    ui->NOutput->value("");
+    ui->resultOutput->value("");
+    ui->aChoice->clear();
+    ui->aChoice->redraw();
+    ui->eChoice->clear();
+    ui->eChoice->redraw();
+
+    infString = "";
+}
+
+void MainWindow::clearOnCode(Fl_Widget*, void* userdata) {
+    auto* ui = static_cast<MainWindow*>(userdata);
+
+    ui->controlOutput->value("");
+    ui->rOutput->value("");
+    ui->NOutput->value("");
+    ui->resultOutput->value("");
+    ui->eChoice->clear();
+    ui->eChoice->redraw();
+}
+
 bool MainWindow::validateString(const std::string& s, bool isInf){
     if (s.size() > 20 && isInf) {
         return false;
@@ -159,5 +198,5 @@ bool MainWindow::validateString(const std::string& s, bool isInf){
         }
     }
 
-    return true;
+    return !s.empty();
 }
